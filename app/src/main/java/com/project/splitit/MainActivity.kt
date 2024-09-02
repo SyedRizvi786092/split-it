@@ -27,6 +27,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -63,7 +66,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MyApp(content: @Composable (MutableState<Double>) -> Unit) {
     val tppState = remember {
-        mutableStateOf(0.0)
+        mutableDoubleStateOf(0.0)
     }
     SplitItTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -116,13 +119,13 @@ fun BillForm(modifier: Modifier, tppState: MutableState<Double>) {
     }
     val keyboardController = LocalSoftwareKeyboardController.current
     val tipState = remember {
-        mutableStateOf(0.0)
+        mutableDoubleStateOf(0.0)
     }
     val sliderState = remember {
-        mutableStateOf(0f)
+        mutableFloatStateOf(0f)
     }
     val splitAmong = remember {
-        mutableStateOf(1)
+        mutableIntStateOf(1)
     }
     Surface(modifier = modifier.padding(10.dp),
         shape = RoundedCornerShape(8.dp),
@@ -134,10 +137,10 @@ fun BillForm(modifier: Modifier, tppState: MutableState<Double>) {
                 onValueChange = { newVal ->
                     if(newVal.isValid()) {
                         tppState.value = calculateTotalPerPerson(totalBill = totalBillState.value.trim().toInt(),
-                            tipInFloat = sliderState.value,
-                            splitBy = splitAmong.value)
-                        tipState.value = calculateTotalTip(totalBill = totalBillState.value.trim().toInt(),
-                            tipInFloat = sliderState.value)
+                            tipInFloat = sliderState.floatValue,
+                            splitBy = splitAmong.intValue)
+                        tipState.doubleValue = calculateTotalTip(totalBill = totalBillState.value.trim().toInt(),
+                            tipInFloat = sliderState.floatValue)
                     }
                     else tppState.value = 0.00
                 },
